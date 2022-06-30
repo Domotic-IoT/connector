@@ -86,9 +86,11 @@ public class Mqtt implements IngestorInterface {
             options.setAutomaticReconnect(true);
             options.setCleanSession(true);
             options.setConnectionTimeout(10);
-            options.setUserName(username);
-            options.setPassword(password.toCharArray());
-            options.setSocketFactory(SSLSocketFactory.getDefault());
+            if (!username.isEmpty() && !password.isEmpty()) {
+                options.setUserName(username);
+                options.setPassword(password.toCharArray());
+                options.setSocketFactory(SSLSocketFactory.getDefault());
+	    }
             client.connect(options);
             client.subscribe("sensors/#", (topic, message) -> processMessage(topic, message));
             while (!Thread.currentThread().isInterrupted()) {
