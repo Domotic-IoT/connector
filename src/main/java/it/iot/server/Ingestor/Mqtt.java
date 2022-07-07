@@ -3,15 +3,12 @@ package it.iot.server.Ingestor;
 import java.nio.charset.StandardCharsets;
 import java.rmi.UnexpectedException;
 
-import javax.net.ssl.SSLSocketFactory;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
-import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
@@ -26,48 +23,30 @@ import it.iot.server.Storage.StorageInterface;
 public class Mqtt implements IngestorInterface {
     public static final int WAITING_TIME = 1000;
     private IMqttClient client;
-    private String username;
-    private String password;
     private StorageInterface storage;
     private Logger logger;
 
     public Mqtt(
         IMqttClient client,
-        String username,
-        String password,
         StorageInterface storage,
         Logger logger
     ) {
         this.client = client;
-        this.username = username;
-        this.password = password;
         this.storage = storage;
         this.logger = logger;
     }
 
     public Mqtt(
         IMqttClient client,
-        String username,
-        String password,
         StorageInterface storage
     ) {
         this.client = client;
-        this.username = username;
-        this.password = password;
         this.storage = storage;
         this.logger = Logger.getLogger("default");
     }
 
     public IMqttClient getClient() {
         return client;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public StorageInterface getStorage() {
@@ -82,16 +61,6 @@ public class Mqtt implements IngestorInterface {
     public void activate() {
         this.logger.info("MQTT ingestor activated.");
         try {
-            MqttConnectOptions options = new MqttConnectOptions();
-            options.setAutomaticReconnect(true);
-            options.setCleanSession(true);
-            options.setConnectionTimeout(10);
-            if (!username.isEmpty() && !password.isEmpty()) {
-                options.setUserName(username);
-                options.setPassword(password.toCharArray());
-                options.setSocketFactory(SSLSocketFactory.getDefault());
-	    }
-            client.connect(options);
             client.subscribe("sensors/#", (topic, message) -> processMessage(topic, message));
             while (!Thread.currentThread().isInterrupted()) {
                 Thread.sleep(WAITING_TIME);
@@ -107,13 +76,6 @@ public class Mqtt implements IngestorInterface {
     @Override
     public void stop() {
         logger.info("MQTT ingestor stopped.");
-        try {
-            client.disconnect();
-            client.close();
-        } catch (MqttException e) {
-            logger.error(e.getMessage());
-            logger.debug(ExceptionUtils.getStackTrace(e));
-        }
     }
 
     private void processMessage(String topic, MqttMessage message) {
