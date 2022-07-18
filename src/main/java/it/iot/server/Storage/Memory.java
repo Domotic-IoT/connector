@@ -71,6 +71,5 @@ public class Memory implements StorageInterface {
     public void persist(AbstractMeasure measure) {
         logger.info("Storing measure for room " +  measure.getRoomIdentifier() + ", from device " + measure.getDeviceIdentifier() + ".");
         data.add(measure);
-    }
-    
+    }   
 }
