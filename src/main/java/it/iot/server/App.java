@@ -42,6 +42,9 @@ public class App {
             Properties configuration = new Properties();
             configuration.load(new FileInputStream(args[0]));
 
+            // Starts
+            Logger.getLogger("standard").info("Running with process id: " + ProcessHandle.current().pid());
+
             // Builds storage
             MongoDatabase database = MongoDbConnection.fromParameters(
                 configuration.getProperty("mongodb.host"),
@@ -79,7 +82,7 @@ public class App {
             ClassifierInterface node = (Split) objectInputStream.readObject();
             objectInputStream.close();
             RecommenderInterface simpleReflex = new SimpleReflex(
-                new StateReader(mapper),
+                new StateReader(configuration.getProperty("recommender.roomIdentifier"), mapper),
                 node,
                 new it.iot.server.Recommender.Mqtt(client)
             );
@@ -91,7 +94,6 @@ public class App {
             recommender.activate();
 
             // Waits for SIGTERM...
-            Logger.getLogger("standard").info("Running with process id: " + ProcessHandle.current().pid());
             Runtime.getRuntime().addShutdownHook(new Thread() {
                 public void run() {
                     Logger.getLogger("standard").info("Received termination signal.");
@@ -101,6 +103,7 @@ public class App {
                     try {
                         client.disconnect();
                         client.close();
+                        Logger.getLogger("standard").info("MQTT client disconnected.");
                     } catch (MqttException e) {
                         Logger.getLogger("standard").error(e.getMessage());
                         Logger.getLogger("standard").debug(ExceptionUtils.getStackTrace(e));

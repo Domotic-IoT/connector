@@ -42,3 +42,4 @@ http.port=8080
 # Recommender
 recommender.path=classifier.dat
 recommender.sleep=5000
+recommender.roomIdentifier=myRoom

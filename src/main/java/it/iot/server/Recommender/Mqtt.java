@@ -1,7 +1,11 @@
 package it.iot.server.Recommender;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.apache.log4j.Logger;
 import org.eclipse.paho.client.mqttv3.IMqttClient;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 public class Mqtt implements ActionPerformerInterface {
     private IMqttClient client;
@@ -25,11 +29,26 @@ public class Mqtt implements ActionPerformerInterface {
         return logger;
     }
 
-    /**
-     * @todo Implement me
-     */
     @Override
     public void write(String action) {
-        logger.info("Performing action over MQTT : " + action + ".");
+        logger.info("Sending action over MQTT : " + action + ".");
+        Pattern pattern = Pattern.compile("(\\p{Alpha}+)\\((\\p{Alpha}+)\\)", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(action);
+        boolean matchFound = matcher.find();
+        if (matchFound) {
+            String device = matcher.group(1);
+            String state = matcher.group(2);
+            MqttMessage message = new MqttMessage(state.getBytes());
+            message.setQos(0);
+            try {
+                client.publish("actuators/" + device, message);
+            }
+            catch (Exception e) {
+                logger.warn("Could not send action: " + e.getMessage() + ".");
+            }
+        }
+        else {
+            logger.warn("Unknown action \"" + action + "\".");
+        }
     }
 }
