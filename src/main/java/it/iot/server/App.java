@@ -29,8 +29,24 @@ import it.iot.server.Recommender.Classifier.ClassifierInterface;
 import it.iot.server.Recommender.Classifier.Cart.*;
 //
 
+/**
+ * IoT connector application
+ * 
+ * @author Marco Zanella
+ */
 public class App {
-    public static void main( String[] args ) {
+    /**
+     * Program entry point
+     * 
+     * Reads configuration, issues connections to necessary services
+     * (database, MQTT broker...), builds a recommender, then waits
+     * for new measures to insert, measure search requests, and
+     * periodically sends recommendations.
+     * 
+     * @param args Argument vector, first element must be path to
+     *             configuration file
+     */
+    public static void main(String[] args) {
         if (args.length < 2) {
             System.out.println("Arguments: <config path>");
             return;

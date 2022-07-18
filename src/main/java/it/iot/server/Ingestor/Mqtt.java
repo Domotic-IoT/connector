@@ -20,12 +20,43 @@ import it.iot.server.Measure.Humidity;
 import it.iot.server.Measure.Temperature;
 import it.iot.server.Storage.StorageInterface;
 
+/**
+ * Ingestor based on MQTT
+ * 
+ * Subscribes to one or more topics on an MQTT broker, then continuosly
+ * waits for new messages. Inserts measures in a storage medium as soon
+ * as they arrive.
+ * 
+ * @author Marco Zanella
+ */
 public class Mqtt implements IngestorInterface {
+    /**
+     * Sleeping time
+     */
     public static final int WAITING_TIME = 1000;
+
+    /**
+     * MQTT client
+     */
     private IMqttClient client;
+
+    /**
+     * Storage medium
+     */
     private StorageInterface storage;
+
+    /**
+     * Logger
+     */
     private Logger logger;
 
+    /**
+     * Constructor
+     * 
+     * @param client  MQTT client
+     * @param storage Storage medium
+     * @param logger  Logger
+     */
     public Mqtt(
         IMqttClient client,
         StorageInterface storage,
@@ -36,6 +67,14 @@ public class Mqtt implements IngestorInterface {
         this.logger = logger;
     }
 
+    /**
+     * Constructor
+     * 
+     * Uses default logger.
+     * 
+     * @param client  MQTT client
+     * @param storage Storage medium
+     */
     public Mqtt(
         IMqttClient client,
         StorageInterface storage
@@ -45,18 +84,36 @@ public class Mqtt implements IngestorInterface {
         this.logger = Logger.getLogger("default");
     }
 
+    /**
+     * Returns MQTT client
+     * 
+     * @return MQTT client
+     */
     public IMqttClient getClient() {
         return client;
     }
 
+    /**
+     * Returns storage medium
+     * 
+     * @return Storage medium
+     */
     public StorageInterface getStorage() {
         return storage;
     }
 
+    /**
+     * Returns logger
+     * 
+     * @return Logger
+     */
     public Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Activates ingestor
+     */
     @Override
     public void activate() {
         this.logger.info("MQTT ingestor activated.");
@@ -73,11 +130,22 @@ public class Mqtt implements IngestorInterface {
         }
     }
 
+    /**
+     * Stops ingestor
+     */
     @Override
     public void stop() {
         logger.info("MQTT ingestor stopped.");
     }
 
+    /**
+     * Processes an incoming message
+     * 
+     * Converts message into a measure, then stores it into storage medium.
+     * 
+     * @param topic   MQTT topic
+     * @param message MQTT message
+     */
     private void processMessage(String topic, MqttMessage message) {
         String roomId = topic.replaceAll("^sensors/(\\w*)/(\\w*)", "$1");
         String type = topic.replaceAll("^sensors/(\\w*)/(\\w*)", "$2");
@@ -102,6 +170,14 @@ public class Mqtt implements IngestorInterface {
         }
     }
 
+    /**
+     * Converts raw data into a measure
+     * @param roomIdentifier Identifier of room
+     * @param type           Type of measure
+     * @param rawData        Raw data
+     * @return Measure
+     * @throws UnexpectedException If type of measure is unknown
+     */
     private AbstractMeasure processMeasure(String roomIdentifier, String type, MqttMeasure rawData) throws UnexpectedException {
         switch (type) {
             case "temperature":

@@ -7,11 +7,35 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 
 import it.iot.server.DataMapper.MeasureInterface;
 
+/**
+ * Simple webserver exposing REST API for measures
+ * 
+ * This class implements the Facade design pattern.
+ * 
+ * @author Marco Zanella
+ */
 public class ServerFacade implements Runnable {
+    /**
+     * Serve object
+     */
     private Server server;
+
+    /**
+     * Thread on which server runs
+     */
     private Thread thread;
+
+    /**
+     * Logger
+     */
     private Logger logger;
 
+    /**
+     * Constructor
+     * 
+     * @param port   Port to listen to
+     * @param mapper Data mapper for measures
+     */
     public ServerFacade(int port, MeasureInterface mapper) {
         server = new Server(port);
         thread = new Thread(this);
@@ -26,11 +50,17 @@ public class ServerFacade implements Runnable {
         handler.addServlet(MeasureServlet.class, "/measures");
     }
 
+    /**
+     * Starts server
+     */
     public void start() {
         logger.info("Webserver started.");
         thread.start();
     }
 
+    /**
+     * Stops server
+     */
     public void stop() {
         try {
             server.stop();
@@ -47,6 +77,9 @@ public class ServerFacade implements Runnable {
         logger.info("Webserver stopped.");
     }
 
+    /**
+     * Activates server on a separate thread
+     */
     @Override
     public void run() {
         try {

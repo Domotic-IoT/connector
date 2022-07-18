@@ -9,13 +9,31 @@ import it.iot.server.Measure.LightLevel;
 import it.iot.server.Measure.Temperature;
 import it.iot.server.Measure.VisitorInterface;
 
+/**
+ * Converts a measure into a BSON object.
+ * 
+ * @author Marco Zanella
+ */
 public class MeasureVisitor implements VisitorInterface {
+    /**
+     * BSON object
+     */
     private Document document;
 
+    /**
+     * Returns BSON object
+     * 
+     * @return BSON object
+     */
     public Document getDocument() {
         return document;
     }
 
+    /**
+     * Converts a temperature
+     * 
+     * @param temperature Temperature
+     */
     @Override
     public void visit(Temperature temperature) {
         document = new Document();
@@ -29,6 +47,11 @@ public class MeasureVisitor implements VisitorInterface {
         ;
     }
 
+    /**
+     * Converts a humidity
+     * 
+     * @param humidity Humidity
+     */
     @Override
     public void visit(Humidity humidity) {
         document = new Document();
@@ -42,6 +65,11 @@ public class MeasureVisitor implements VisitorInterface {
         ;
     }
 
+    /**
+     * Converts a heat index
+     * 
+     * @param heatIndex Heat index
+     */
     @Override
     public void visit(HeatIndex heatIndex) {
         document = new Document();
@@ -55,6 +83,11 @@ public class MeasureVisitor implements VisitorInterface {
         ;
     }
 
+    /**
+     * Converts a light level
+     * 
+     * @param lightLevel Light level
+     */
     @Override
     public void visit(LightLevel lightLevel) {
         document = new Document();
@@ -68,6 +101,11 @@ public class MeasureVisitor implements VisitorInterface {
         ;
     }
     
+    /**
+     * Converts a fine dust
+     * 
+     * @param fineDust Fine dust
+     */
     @Override
     public void visit(FineDust fineDust) {
         document = new Document();

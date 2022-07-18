@@ -13,8 +13,18 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+/**
+ * Servelet for handling measure search requests
+ * 
+ * @author Marco Zanella
+ */
 public class MeasureServlet extends HttpServlet {
-
+    /**
+     * Accepts a GET request
+     * 
+     * @param request  Request
+     * @param response Response
+     */
     protected void doGet(
         HttpServletRequest request, 
         HttpServletResponse response

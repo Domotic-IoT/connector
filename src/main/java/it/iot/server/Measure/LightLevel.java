@@ -1,8 +1,27 @@
 package it.iot.server.Measure;
 
+/**
+ * A measure of light level
+ * 
+ * @author Marco Zanella
+ */
 public class LightLevel extends AbstractMeasure {
+    /**
+     * Default constructor
+     * 
+     * Initializes every value to its logical zero
+     */
     public LightLevel() {}
 
+    /**
+     * Constructor
+     * 
+     * @param roomIdentifier   Identifier of room
+     * @param deviceIdentifier Identifier of device
+     * @param value            Value
+     * @param absoluteError    Absolute error
+     * @param timestamp        Timestamp
+     */
     public LightLevel(
         String roomIdentifier,
         String deviceIdentifier,
@@ -19,6 +38,11 @@ public class LightLevel extends AbstractMeasure {
         );
     }
 
+    /**
+     * Accepts a visitor
+     * 
+     * @param visitor Visitor
+     */
     @Override
     public void accept(VisitorInterface visitor) {
         visitor.visit(this);
