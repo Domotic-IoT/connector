@@ -63,6 +63,6 @@ public class SplitTest {
         Leaf left = new Leaf("L");
         Leaf right = new Leaf("R");
         Split split = new Split(0, 0.5, left, right);
-        assertEquals("L", split.classify(point));
+        assertEquals("R", split.classify(point));
     }
 }

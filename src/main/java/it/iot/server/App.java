@@ -19,7 +19,6 @@ import it.iot.server.Ingestor.Concurrent;
 import it.iot.server.Ingestor.Mqtt;
 import it.iot.server.Storage.Database;
 
-//
 import java.io.ObjectInputStream;
 
 import it.iot.server.Recommender.RecommenderInterface;
@@ -27,7 +26,6 @@ import it.iot.server.Recommender.SimpleReflex;
 import it.iot.server.Recommender.StateReader;
 import it.iot.server.Recommender.Classifier.ClassifierInterface;
 import it.iot.server.Recommender.Classifier.Cart.*;
-//
 
 /**
  * IoT connector application
@@ -126,30 +124,6 @@ public class App {
                     }
                 }
             });
-            /*
-            if (false) {
-                Leaf cmvOn = new Leaf("cmv(On)");
-                Leaf heaterOn = new Leaf("heater(On)");
-                Leaf dehumidifierOn = new Leaf("dehumidifier(On)");
-                Leaf dehumidifierOff = new Leaf("dehumidifier(Off)");
-                Leaf conditionerOn = new Leaf("conditioner(On)");
-
-                //[roomTemp, roomHumidity, externalTemp, externalHum]
-                Split s1 = new Split(1, 55.0, dehumidifierOff, dehumidifierOn);
-                Split s2 = new Split(1, 45.0, cmvOn, s1);
-                Split s3 = new Split(2, 24.0, cmvOn, conditionerOn);
-                Split s4 = new Split(0, 24.0, s2, s3);
-                Split root = new Split(0, 18.0, heaterOn, s4);
-
-                node = root;
-            }
-
-            FileOutputStream fileOutputStream = new FileOutputStream(configuration.getProperty("recommender.path"));
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
-            objectOutputStream.writeObject(node);
-            objectOutputStream.flush();
-            objectOutputStream.close();
-            */
         } catch (Exception e) {
             Logger.getLogger("default").fatal(e.getMessage());
             Logger.getLogger("default").debug(ExceptionUtils.getStackTrace(e));

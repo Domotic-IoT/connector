@@ -94,8 +94,8 @@ public class Split implements NodeInterface {
     @Override
     public String classify(double[] point) {
         return point[feature] < threshold
-            ? left.classify(point)
-            : right.classify(point)
+            ? right.classify(point)
+            : left.classify(point)
         ;
     }
 
