@@ -4,6 +4,7 @@ target
 
 # Log file
 *.log
+*.log.*
 
 # BlueJ files
 *.ctxt
@@ -24,4 +25,4 @@ target
 hs_err_pid*
 
 # configuration file
-*.properties
+src/resources/config/config.properties
